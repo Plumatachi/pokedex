@@ -14,8 +14,8 @@ function App() {
         </header>
 
         <Routes>
-          <Route path="/" element={ <h1>Home Page</h1> } />
-          <Route path="/pokedex" element={  <Pokedex /> } />
+          <Route path="/" element={ <Pokedex /> } />
+          {/* <Route path="/pokedex" element={  <Pokedex /> } /> */}
         </Routes>
       </BrowserRouter>
     </>

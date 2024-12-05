@@ -6,7 +6,7 @@
 }
 
 a {
-  color: #00b392;
+  color: #d80d0d;
 }
 
 nav {
@@ -25,12 +25,12 @@ nav a {
 
 nav a:hover {
   color: #ffffff;
-  background-color: #45edd7;
+  background-color: #e62121;
 }
 
 nav a:active, nav a.selected {
   color: #ffffff;
-  background-color: #00b365;
+  background-color: #cf1f1f;
   font-weight: bold;
 }
 

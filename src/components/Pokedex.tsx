@@ -22,7 +22,7 @@ const Pokedex = () => {
                 }
                 const data = await response.json();
                 const filteredTypes = data.results.filter(
-                    (t) => t.name !== "unknown" && t.name !== "shadow"
+                    (t) => t.name !== "unknown" && t.name !== "shadow" && t.name !== "stellar"
                 );
                 setTypes(filteredTypes);
             } catch (err) {
@@ -34,16 +34,33 @@ const Pokedex = () => {
     }, []);
 
     useEffect(() => {
-        const fetchPokemon = async () => {
+        const fetchAllPokemon = async () => {
             try {
-                const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=10000");
+                const limit = 100;
+                const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1");
                 if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération des Pokémon");
+                    throw new Error("Erreur lors de la récupération de la liste des Pokémon.");
                 }
 
                 const data = await response.json();
+                const totalPokemon = data.count;
+                const totalPages = Math.ceil(totalPokemon / limit);
+                const allPokemonData = [];
+
+                for (let page = 0; page < totalPages; page++) {
+                    const offset = page * limit;
+                    const pageResponse = await fetch(
+                        `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`
+                    );
+                    if (!pageResponse.ok) {
+                        throw new Error(`Erreur lors de la récupération de la page ${page + 1}`);
+                    }
+                    const pageData = await pageResponse.json();
+                    allPokemonData.push(...pageData.results);
+                }
+
                 const allDetailedPokemon = await Promise.all(
-                    data.results.map(async (p) => {
+                    allPokemonData.map(async (p) => {
                         try {
                             const speciesResponse = await fetch(
                                 `https://pokeapi.co/api/v2/pokemon-species/${p.name}`
@@ -86,7 +103,7 @@ const Pokedex = () => {
             }
         };
 
-        fetchPokemon();
+        fetchAllPokemon();
     }, []);
 
     useEffect(() => {

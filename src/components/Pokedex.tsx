@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import "../static/Pokedex.css";
 
 const Pokedex = () => {
@@ -22,7 +23,7 @@ const Pokedex = () => {
                 }
                 const data = await response.json();
                 const filteredTypes = data.results.filter(
-                    (t) => t.name !== "unknown" && t.name !== "shadow"
+                    (t) => t.name !== "unknown" && t.name !== "shadow" && t.name !== "stellar"
                 );
                 setTypes(filteredTypes);
             } catch (err) {
@@ -136,10 +137,10 @@ const Pokedex = () => {
             </select>
             <div className="pokemon-grid">
                 {currentPagePokemon.map((p) => (
-                    <div key={p.id} className="pokemon-card">
+                    <Link to={`/pokemon/${p.id}`} key={p.id} className="pokemon-card">
                         <img src={p.image} alt={p.name} />
                         <p>{p.name}</p>
-                    </div>
+                    </Link>
                 ))}
             </div>
             <div className="pagination">

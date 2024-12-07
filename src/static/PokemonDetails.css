@@ -7,6 +7,25 @@
     width: 50vw;
     display: flex;
     flex-direction: column;
+    position: relative;
+}
+
+.addToTeam {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.addToTeam:hover {
+    background-color: #45a049;
 }
 
 .generation-select {
@@ -29,7 +48,10 @@
 }
 
 .pokemon-images img {
-    width: 8vw;
+    background-color: #dadada;
+    background-repeat: no-repeat;
+    border-radius: 8px;
+    width: 80%;
 }
 
 .image-buttons {
@@ -48,12 +70,12 @@
 }
 
 .image-buttons button.active {
-    background-color: #810f0f;
+    background-color: #942525;
     color: white;
 }
 
 .image-buttons button:hover {
-    background-color: #af4646;
+    background-color: #801d1d;
 }
 
 

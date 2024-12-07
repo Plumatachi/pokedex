@@ -38,7 +38,7 @@ const Pokedex = () => {
         const fetchAllPokemon = async () => {
             try {
                 const limit = 100;
-                const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1");
+                const response = await fetch("https://pokeapi.co/api/v2/pokemon");
                 if (!response.ok) {
                     throw new Error("Erreur lors de la récupération de la liste des Pokémon.");
                 }

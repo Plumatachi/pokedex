@@ -12,13 +12,14 @@ const PokemonDetails = () => {
     const [descriptions, setDescriptions] = useState([]);
     const [localizedName, setLocalizedName] = useState("");
     const [currentForm, setCurrentForm] = useState("normal");
+    const [team, setTeam] = useState(JSON.parse(localStorage.getItem("team")) || []);
 
     const generationMapping = {
         "generation-i": ["red", "blue", "yellow"],
         "generation-ii": ["gold", "silver", "crystal"],
         "generation-iii": ["ruby", "sapphire", "emerald"],
         "generation-iv": ["diamond", "pearl", "platinum", "heartgold", "soulsilver"],
-        "generation-v": ["black", "black-2", "white-2"],
+        "generation-v": ["black", "white", "black-2", "white-2"],
         "generation-vi": ["x", "y", "omega-ruby", "alpha-sapphire"],
         "generation-vii": ["sun", "moon", "ultra-sun", "ultra-moon"],
         "generation-viii": ["sword", "shield"],
@@ -57,7 +58,6 @@ const PokemonDetails = () => {
         setSelectedGeneration(generation);
 
         if (species) {
-            // Filtrer les descriptions pour la génération et les versions associées
             const generationVersions = generationMapping[generation];
 
             const filteredDescriptions = generationVersions.map((version) => {
@@ -76,78 +76,39 @@ const PokemonDetails = () => {
     };
 
     useEffect(() => {
-        // Charger les descriptions de la génération par défaut (génération-i) au premier chargement
         handleGenerationChange(selectedGeneration);
     }, [species]);
 
-    // const renderGenderDifferences = () => {
-    //     if (
-    //         !pokemon.sprites.front_female &&
-    //         !pokemon.sprites.back_female
-    //     ) {
-    //         return <p>Pas de différence visuelle entre mâles et femelles.</p>;
-    //     }
+    const addToTeam = () => {
+        if (team.length < 6) {
+            const pokemonToAdd = {
+                id: pokemon.id,
+                name: localizedName,
+                form: currentForm,
+                image: currentForm === "normal" ? pokemon.sprites.front_default : pokemon.sprites.front_shiny,
+                stat: pokemon.stats.map((stat) => ({
+                    stat: { name: stat.stat.name },
+                    base_stat: stat.base_stat
+                })),
+                types: pokemon.types.map((type) => type.type.name),
+            };
 
-    //     return (
-    //         <table className="gender-differences-table">
-    //             <thead>
-    //                 <tr>
-    //                     <th>Mâle</th>
-    //                     <th>Femelle</th>
-    //                 </tr>
-    //             </thead>
-    //             <tbody>
-    //                 <tr>
-    //                     <td>
-    //                         <img
-    //                             src={pokemon.sprites.front_default}
-    //                             alt={`Sprite mâle de ${localizedName}`}
-    //                         />
-    //                     </td>
-    //                     <td>
-    //                         {pokemon.sprites.front_female ? (
-    //                             <img
-    //                                 src={pokemon.sprites.front_female}
-    //                                 alt={`Sprite femelle de ${localizedName}`}
-    //                             />
-    //                         ) : (
-    //                             "Non disponible"
-    //                         )}
-    //                     </td>
-    //                 </tr>
-    //                 <tr>
-    //                     <td>
-    //                         <img
-    //                             src={pokemon.sprites.back_default}
-    //                             alt={`Sprite arrière mâle de ${localizedName}`}
-    //                         />
-    //                     </td>
-    //                     <td>
-    //                         {pokemon.sprites.back_female ? (
-    //                             <img
-    //                                 src={pokemon.sprites.back_female}
-    //                                 alt={`Sprite arrière femelle de ${localizedName}`}
-    //                             />
-    //                         ) : (
-    //                             "Non disponible"
-    //                         )}
-    //                     </td>
-    //                 </tr>
-    //             </tbody>
-    //         </table>
-    //     );
-    // };
+            setTeam([...team, pokemonToAdd]);
+            alert("Le Pokémon a bien été ajouté à votre équipe.");
+
+            localStorage.setItem("team", JSON.stringify([...team, pokemonToAdd]));
+        } else {
+            alert("Votre équipe est déjà complète (6 Pokémon max).");
+        }
+    };
 
     const renderGenderDifferences = () => {
-        if (
-            !pokemon.sprites.front_female &&
-            !pokemon.sprites.back_female
-        ) {
+        if (!pokemon.sprites.front_female && !pokemon.sprites.back_female) {
             return <p>Pas de différence visuelle entre mâles et femelles.</p>;
         }
-    
+
         return (
-            <div>    
+            <div>
                 <table className="gender-differences-table">
                     <thead>
                         <tr>
@@ -159,22 +120,14 @@ const PokemonDetails = () => {
                         <tr>
                             <td>
                                 <img
-                                    src={
-                                        currentForm === "normal"
-                                            ? pokemon.sprites.front_default
-                                            : pokemon.sprites.front_shiny
-                                    }
+                                    src={currentForm === "normal" ? pokemon.sprites.front_default : pokemon.sprites.front_shiny}
                                     alt={`Sprite ${currentForm} mâle de ${localizedName}`}
                                 />
                             </td>
                             <td>
                                 {pokemon.sprites.front_female ? (
                                     <img
-                                        src={
-                                            currentForm === "normal"
-                                                ? pokemon.sprites.front_female
-                                                : pokemon.sprites.front_shiny_female
-                                        }
+                                        src={currentForm === "normal" ? pokemon.sprites.front_female : pokemon.sprites.front_shiny_female}
                                         alt={`Sprite ${currentForm} femelle de ${localizedName}`}
                                     />
                                 ) : (
@@ -185,22 +138,14 @@ const PokemonDetails = () => {
                         <tr>
                             <td>
                                 <img
-                                    src={
-                                        currentForm === "normal"
-                                            ? pokemon.sprites.back_default
-                                            : pokemon.sprites.back_shiny
-                                    }
+                                    src={currentForm === "normal" ? pokemon.sprites.back_default : pokemon.sprites.back_shiny}
                                     alt={`Sprite ${currentForm} arrière mâle de ${localizedName}`}
                                 />
                             </td>
                             <td>
                                 {pokemon.sprites.back_female ? (
                                     <img
-                                        src={
-                                            currentForm === "normal"
-                                                ? pokemon.sprites.back_female
-                                                : pokemon.sprites.back_shiny_female
-                                        }
+                                        src={currentForm === "normal" ? pokemon.sprites.back_female : pokemon.sprites.back_shiny_female}
                                         alt={`Sprite ${currentForm} arrière femelle de ${localizedName}`}
                                     />
                                 ) : (
@@ -212,7 +157,7 @@ const PokemonDetails = () => {
                 </table>
             </div>
         );
-    };    
+    };
 
     if (loading) {
         return <div>Chargement des données...</div>;
@@ -228,6 +173,7 @@ const PokemonDetails = () => {
 
     return (
         <div className="pokemon-details">
+            <button onClick={addToTeam} className='addToTeam'>Ajouter à l'équipe</button>
             <h1>{localizedName}</h1>
             <div className="pokemon-header">
                 <div className="pokemon-images">

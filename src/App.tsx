@@ -4,6 +4,7 @@ import { Navigation } from './partials/Navigation'
 import './App.css'
 import Pokedex from './components/Pokedex'
 import PokemonDetails from './components/PokemonDetails'
+import TeamPage from './components/Team'
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={ <Pokedex /> } />
           <Route path="/pokemon/:id" element={ <PokemonDetails /> } />
+          <Route path="/equipe" element={ <TeamPage /> } />
         </Routes>
       </BrowserRouter>
     </>

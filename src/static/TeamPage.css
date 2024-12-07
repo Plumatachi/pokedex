@@ -1,0 +1,81 @@
+.team-page {
+    padding: 20px;
+    text-align: center;
+}
+
+.team-container-infos {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+}
+
+.team-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.team-member {
+    background-color: #333;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 10px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-member:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.team-member h2 {
+    color: white;
+}
+
+.team-member:hover h2 {
+    color: red;
+    transition: color 0.3s ease;
+}
+
+.pokemon-image {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+}
+
+.pokemon-info {
+    margin: 10px 0;
+}
+
+.remove-button {
+    background-color: #ff6f61;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.remove-button:hover {
+    background-color: #e54e47;
+}
+
+.radar-container {
+    width: 500px;
+    height: 500px;
+    margin: 0 auto;
+}
+
+.pokemon-types {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.type img {
+    width: 50%;
+}

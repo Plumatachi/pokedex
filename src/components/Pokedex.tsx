@@ -22,6 +22,7 @@ const Pokedex = () => {
                     throw new Error("Erreur lors de la récupération des types");
                 }
                 const data = await response.json();
+
                 const filteredTypes = data.results.filter(
                     (t) => t.name !== "unknown" && t.name !== "shadow" && t.name !== "stellar"
                 );
@@ -36,32 +37,16 @@ const Pokedex = () => {
 
     useEffect(() => {
         const fetchAllPokemon = async () => {
+            setLoading(true);
             try {
-                const limit = 100;
-                const response = await fetch("https://pokeapi.co/api/v2/pokemon");
+                const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1205&offset=0");
                 if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération de la liste des Pokémon.");
+                    throw new Error("Erreur lors de la récupération des Pokémon.");
                 }
-
                 const data = await response.json();
-                const totalPokemon = data.count;
-                const totalPages = Math.ceil(totalPokemon / limit);
-                const allPokemonData = [];
-
-                for (let page = 0; page < totalPages; page++) {
-                    const offset = page * limit;
-                    const pageResponse = await fetch(
-                        `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`
-                    );
-                    if (!pageResponse.ok) {
-                        throw new Error(`Erreur lors de la récupération de la page ${page + 1}`);
-                    }
-                    const pageData = await pageResponse.json();
-                    allPokemonData.push(...pageData.results);
-                }
 
                 const allDetailedPokemon = await Promise.all(
-                    allPokemonData.map(async (p) => {
+                    data.results.map(async (p) => {
                         try {
                             const speciesResponse = await fetch(
                                 `https://pokeapi.co/api/v2/pokemon-species/${p.name}`
@@ -89,7 +74,7 @@ const Pokedex = () => {
                             };
                         } catch (err) {
                             console.error(`Erreur avec le Pokémon ${p.name}:`, err);
-                            return null;
+                            return null; // Si une erreur survient, ignorer ce Pokémon
                         }
                     })
                 );
@@ -97,9 +82,11 @@ const Pokedex = () => {
                 const validPokemon = allDetailedPokemon.filter((p) => p !== null);
                 setAllPokemon(validPokemon);
                 setFilteredPokemon(validPokemon);
-                setLoading(false);
+
+                console.log("Tous les Pokémon récupérés :", validPokemon);
             } catch (err) {
                 setError(err.message);
+            } finally {
                 setLoading(false);
             }
         };
@@ -140,7 +127,7 @@ const Pokedex = () => {
             <h1>Pokedex</h1>
             <input
                 type="text"
-                placeholder="Recherche un pokémon..."
+                placeholder="Recherche un Pokémon..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
             />
@@ -161,8 +148,15 @@ const Pokedex = () => {
                 ))}
             </div>
             <div className="pagination">
-                <button onClick={() => setPage(page - 1)} disabled={page === 1}>Page précédente</button>
-                <button onClick={() => setPage(page + 1)} disabled={currentPagePokemon.length < itemsPerPage}>Page suivante</button>
+                <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+                    Page précédente
+                </button>
+                <button
+                    onClick={() => setPage(page + 1)}
+                    disabled={currentPagePokemon.length < itemsPerPage}
+                >
+                    Page suivante
+                </button>
                 <p>Page actuelle : {page}</p>
             </div>
         </div>
